@@ -301,7 +301,8 @@ class _Runtime(object):
                 self.address = address
         else:
             self.device_memory_size = self.engine.device_memory_size_v2
-            address = CUASSERT(cudart.cudaMalloc(self.device_memory_size))[0]
+            address = CUASSERT(cudart.cudaMalloc(self.device_memory_size +
+                                                 1))[0]
             self.address = address
 
         with _scoped_stream() as stream:
