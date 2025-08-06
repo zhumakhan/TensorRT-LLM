@@ -14,14 +14,26 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 #
+
+# add_compile_definitions(DISABLE_BACKWARD)
+# add_compile_definitions(DISABLE_SPLIT)
+# add_compile_definitions(DISABLE_PAGEDKV)
+# add_compile_definitions(DISABLE_APPENDKV)
+# add_compile_definitions(DISABLE_LOCAL)
+# add_compile_definitions(DISABLE_SOFTCAP)
+# add_compile_definitions(DISABLE_PACKGQA) add_compile_definitions(DISABLE_FP8)
+# add_compile_definitions(DISABLE_VARLEN)
+# add_compile_definitions(DISABLE_HDIM64)
+# add_compile_definitions(DISABLE_HDIM96)
+# add_compile_definitions(DISABLE_HDIM192)
+# add_compile_definitions(DISABLE_HDIM256) add_compile_definitions(DISABLE_SM8x)
+# file(GLOB SRCS *.cpp flash-attention/hopper/*.cpp
+# flash-attention/hopper/instantiations/*.cu)
+
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
 file(GLOB SRCS *.cpp)
 set(PLUGIN_SOURCES ${PLUGIN_SOURCES} ${SRCS})
 set(PLUGIN_SOURCES
     ${PLUGIN_SOURCES}
     PARENT_SCOPE)
-add_executable(tests ${PLUGIN_SOURCES})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/flash-attention/hopper)
-add_library(fa3_compiled SHARED IMPORTED)
-set_target_properties(
-  fa3_compiled PROPERTIES IMPORTED_LOCATION
-                          ${CMAKE_CURRENT_SOURCE_DIR}/_C.abi3.so)

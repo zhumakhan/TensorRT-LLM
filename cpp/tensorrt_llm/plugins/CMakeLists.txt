@@ -183,3 +183,10 @@ endif()
 if(ENABLE_MULTI_DEVICE)
   target_link_libraries(${PLUGIN_SHARED_TARGET} ${MPI_C_LIBRARIES} ${NCCL_LIB})
 endif()
+
+set(CMAKE_VERBOSE_MAKEFILE ON)
+add_library(fa3_compiled SHARED IMPORTED)
+set_target_properties(
+  fa3_compiled PROPERTIES IMPORTED_LOCATION
+                          ${CMAKE_CURRENT_SOURCE_DIR}/fa3Plugin/_C.abi3.so)
+target_link_libraries(${PLUGIN_SHARED_TARGET} fa3_compiled)

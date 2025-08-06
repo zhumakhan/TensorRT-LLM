@@ -57,7 +57,7 @@ public:
 
     template <typename T>
     int enqueueImpl(nvinfer1::PluginTensorDesc const* inputDesc, nvinfer1::PluginTensorDesc const* outputDesc,
-        void const* const* inputs, void* const* outputs, void* workspace, cudaStream_t stream);
+        void const* const* inputs, void* const* outputs, void* workspace, bool is_bf16, cudaStream_t stream);
 
     // IPluginV2Ext Methods
     nvinfer1::DataType getOutputDataType(

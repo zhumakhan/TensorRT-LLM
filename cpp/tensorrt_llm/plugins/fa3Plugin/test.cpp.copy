@@ -4,7 +4,8 @@
 #include <cuda_fp16.h>
 #include <cuda_bf16.h>
 #include <cuda_runtime.h>
-#include "flash_api.h"
+// #include "flash_api.h"
+#include "tensorrt_llm/plugins/fa3Plugin/flash-attention/hopper/flash_api.h"
 
 #include <iostream>
 
@@ -15,8 +16,8 @@ int main(){
     int heads = 40;
     int dim = 128;
 
-    // using half_t = __nv_bfloat16;
-    using half_t = __half;
+    using half_t = __nv_bfloat16;
+    // using half_t = __half;
 
     half_t *q;
     half_t *k;
@@ -38,6 +39,14 @@ int main(){
         return 1;
     }
 
-    mha_fwd(q,k,v,out,softmax_lse_ptr, batch_size, seqlen_q, seqlen_k, heads, dim, false, stream);
+    mha_fwd(q, k, v, out, softmax_lse_ptr, batch_size, seqlen_q, seqlen_k, heads, dim, true, stream);
     cudaDeviceSynchronize();
+
+    err = cudaGetLastError();
+
+    if (err != cudaSuccess) {
+        std::cerr << "CUDA error: " << cudaGetErrorString(err) << std::endl;
+    }
+
+
 }

@@ -15,15 +15,16 @@
  * limitations under the License.
  */
 #include "fa3Plugin.h"
-#include "flash_api.h"
 #include "tensorrt_llm/kernels/gptKernels.h"
 #include "tensorrt_llm/kernels/recoverFromRingAtten.h"
 #include "tensorrt_llm/kernels/sageAttentionKernels.h"
 #include "tensorrt_llm/kernels/selectiveScan/CudaType.h"
 #include "tensorrt_llm/kernels/unfusedAttentionKernels.h"
+#include "tensorrt_llm/plugins/fa3Plugin/flash-attention/hopper/flash_api.h"
 #include "tensorrt_llm/runtime/iBuffer.h"
 #include <cassert>
 #include <cstddef>
+// #include "flash_api.h"
 
 using namespace nvinfer1;
 using namespace tensorrt_llm::kernels;
