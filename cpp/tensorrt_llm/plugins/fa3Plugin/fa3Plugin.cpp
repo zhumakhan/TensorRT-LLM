@@ -146,8 +146,8 @@ int Fa3Plugin::enqueueImpl(nvinfer1::PluginTensorDesc const* inputDesc, nvinfer1
     int const num_heads = inputDesc[0].dims.d[2];
     int const dim = inputDesc[0].dims.d[3];
 
-    assert(inputs[0].dims.d[3] == inputs[1].dims.d[3] && "inner dim of q,k and v should match!");
-    assert(inputs[0].dims.d[3] == inputs[2].dims.d[3] && "inner dim of q,k and v should match!");
+    assert(inputDesc[0].dims.d[3] == inputDesc[1].dims.d[3] && "inner dim of q,k and v should match!");
+    assert(inputDesc[0].dims.d[3] == inputDesc[2].dims.d[3] && "inner dim of q,k and v should match!");
 
     T const* query = reinterpret_cast<T const*>(inputs[0]);
     T const* key = reinterpret_cast<T const*>(inputs[1]);
