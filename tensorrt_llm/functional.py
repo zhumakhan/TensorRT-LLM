@@ -4482,6 +4482,42 @@ def gemm_allreduce(a: Tensor,
     return uc_output
 
 
+def flash_attention(query: Tensor,
+                    key: Tensor,
+                    value: Tensor,
+                    num_heads: int,
+                    head_size: int,
+                    dtype: int = 1) -> Tensor:  # noqa: E501
+    """dtype: 1 for fp16, 7 for bf16."""
+    attn_plg_creator = trt.get_plugin_registry().get_plugin_creator(
+        'Fa3', '1', TRT_LLM_PLUGIN_NAMESPACE)
+    assert attn_plg_creator is not None
+
+    nheads = trt.PluginField("num_heads", np.array(num_heads, dtype=np.int32),
+                             trt.PluginFieldType.INT32)
+    head_size = trt.PluginField("head_size", np.array(head_size,
+                                                      dtype=np.int32),
+                                trt.PluginFieldType.INT32)
+    # 1 for fp16
+    # 7 for bf16
+    pf_type = trt.PluginField("type_id", np.array(dtype, np.int32),
+                              trt.PluginFieldType.INT32)
+    pfc = trt.PluginFieldCollection([nheads, head_size, pf_type])
+
+    attn_plug = attn_plg_creator.create_plugin("flash_attention", pfc)
+    plug_inputs = [query, key, value]
+
+    plug_inputs = [i.trt_tensor for i in plug_inputs]
+
+    layer = default_trtnet().add_plugin_v2(plug_inputs, attn_plug)
+    _add_plugin_info(layer, attn_plg_creator, "flash_attention", pfc)
+    assert layer.num_outputs == 1, \
+        f"Plugin outputs number mismatch with expected, got {layer.num_outputs}, expected 1"
+    output = _create_tensor(layer.get_output(0), layer)
+    assert output is not None
+    return output
+
+
 def bert_attention(tensor: Tensor,
                    input_lengths: Tensor,
                    num_heads: int,
